@@ -5,24 +5,124 @@
 //WeatherApi
 const api = (() => {
   const APIkey = "59a3eae2b2ea4a18bf811307232707";
-  let units = "metric";
-  let days = 3;
+  let days = 1;
 
-  async function getInfo(data) {
+  async function getInfo(val) {
     let response = await fetch(
-      `http://api.weatherapi.com/v1/forecast.json?key=${APIkey}&q=${data}&days=${days}`
+      `http://api.weatherapi.com/v1/forecast.json?key=${APIkey}&q=${val}&days=${days}`
     );
 
     if (response.status == 200) {
       let json = await response.json();
       return json;
     } else {
+      console.log(response.status);
       throw new Error(response.status);
     }
   }
 
+  function getEssential(data) {
+    const cityData = getCityData(
+      data.location.country,
+      data.location.localtime,
+      data.location.name,
+      data.location.region
+    );
+
+    const hour = cityData.localtime.slice(11, -3);
+
+    const currentTemp = getTemp(
+      data.current.cloud,
+      data.current.condition.text,
+      data.current.condition.icon,
+      data.current.humidity,
+      data.current.uv
+    );
+
+    const currentTempC = getCurrentTempC(
+      data.current.feelslike_c,
+      data.current.gust_kph,
+      data.current.temp_c,
+      data.current.wind_kph
+    );
+
+    const currentTempF = getCurrentTempF(
+      data.current.feelslike_f,
+      data.current.gust_mph,
+      data.current.temp_f,
+      data.current.wind_mph
+    );
+
+    const todaysTemp = [];
+    for (let i = hour; i < 24; i++) {
+      let hourTemp = getHourlyTemp(
+        data.forecast.forecastday[0].hour[i].condition.text,
+        data.forecast.forecastday[0].hour[i].condition.icon,
+        data.forecast.forecastday[0].hour[i].temp_c,
+        data.forecast.forecastday[0].hour[i].temp_f
+      );
+      todaysTemp.push(hourTemp);
+    }
+
+    return {
+      cityData,
+      hour,
+      currentTemp,
+      currentTempC,
+      currentTempF,
+      todaysTemp,
+    };
+  }
+
+  function getCityData(country, localtime, cityName, region) {
+    return {
+      country: country,
+      localtime: localtime,
+      cityName: cityName,
+      region: region,
+    };
+  }
+
+  function getTemp(cloud, text, icon, humidity, uv) {
+    return {
+      cloud: cloud,
+      text: text,
+      icon: icon,
+      humidity: humidity,
+      uv: uv,
+    };
+  }
+
+  function getCurrentTempC(feelslike, gust, temp, wind) {
+    return {
+      feelslike: feelslike,
+      gust: gust,
+      temp: temp,
+      wind: wind,
+    };
+  }
+
+  function getCurrentTempF(feelslike, gust, temp, wind) {
+    return {
+      feelslike: feelslike,
+      gust: gust,
+      temp: temp,
+      wind: wind,
+    };
+  }
+
+  function getHourlyTemp(text, icon, tempC, tempF) {
+    return {
+      text: text,
+      icon: icon,
+      tempC: tempC,
+      tempF: tempF,
+    };
+  }
+
   return {
     getInfo,
+    getEssential,
   };
 })();
 
