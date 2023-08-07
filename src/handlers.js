@@ -7,8 +7,8 @@ const handlers = (() => {
       let data = await api.getInfo(val);
       console.log(data);
       let essentialData = api.getEssential(data);
-      console.log(essentialData);
-      // dom.displayData(essentialData);
+      // console.log(essentialData);
+      dom.displayData(essentialData);
       dom.displayHourlyData(essentialData.hour, essentialData.todaysTemp);
     } catch (err) {
       if (err == "Error: 400") {

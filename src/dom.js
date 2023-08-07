@@ -98,12 +98,21 @@ const dom = (() => {
       if (e.key != "ArrowUp" && e.key != "ArrowDown" && e.key != "Enter") {
         a = -1;
       }
-      console.log("a:", a);
+      // console.log("a:", a);
     });
+  }
+
+  function displayData(data) {
+    let midDiv = document.querySelector("#mid-top");
+    let country = document.createElement("h1");
+    country.className = "country";
+    country.textContent = `, ${data.cityData.country}`;
+    midDiv.appendChild(country);
   }
 
   function displayHourlyData(hour, data) {
     let container = document.querySelector("#bottom-cont");
+    container.innerHTML = "";
     for (let i = 0; i < data.length; i++) {
       let hourlyDiv = document.createElement("div");
       hourlyDiv.className = "hourly";
@@ -142,6 +151,7 @@ const dom = (() => {
   return {
     input,
     render,
+    displayData,
     displayHourlyData,
   };
 })();
