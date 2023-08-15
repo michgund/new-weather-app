@@ -124,17 +124,39 @@ const dom = (() => {
     let localTime = document.createElement("h2");
     localTime.textContent = "Local Time:";
     leftBotBot.appendChild(localTime);
-    let time = document.createElement("p");
-    let hour = data.cityData.localtime;
-    hour = hour.slice(-5);
-    time.textContent = `${hour}`;
-    leftBotBot.appendChild(time);
+    let clock = createClockPiece("clock", "clockContainer");
+    let hour = createClockPiece("hour", "hour");
+    clock.appendChild(hour);
+    let minute = createClockPiece("minute", "minute");
+    clock.appendChild(minute);
+    let second = createClockPiece("second", "second");
+    clock.appendChild(second);
+    setInterval(() => {
+      // let d = new Date(); //object of date()
+      let hr = data.hour;
+      let min = new Date().getMinutes();
+      let sec = new Date().getSeconds();
+      let hr_rotation = 30 * hr + min / 2; //converting current time
+      let min_rotation = 6 * min;
+      let sec_rotation = 6 * sec;
+
+      hour.style.transform = `rotate(${hr_rotation}deg)`;
+      minute.style.transform = `rotate(${min_rotation}deg)`;
+      second.style.transform = `rotate(${sec_rotation}deg)`;
+    }, 1000);
+    leftBotBot.appendChild(clock);
 
     leftBot.appendChild(leftBotTop);
     leftBot.appendChild(leftBotBot);
 
     let midDiv = document.querySelector("#mid-top");
     midDiv.innerHTML = "";
+  }
+
+  function createClockPiece(pieceName, id) {
+    pieceName = document.createElement("div");
+    pieceName.setAttribute("id", `${id}`);
+    return pieceName;
   }
 
   function displayHourlyData(hour, data) {
