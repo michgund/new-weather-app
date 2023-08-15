@@ -2,7 +2,9 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: Haettenschweiler, "Arial Narrow Bold", sans-serif;
 }
+
 #main {
   height: 100%;
   width: 100vw;
@@ -53,6 +55,10 @@ body {
   flex: 1;
 }
 
+#left-bot {
+  margin-top: 75px;
+}
+
 .search {
   background: none;
   border: 3px solid transparent;
@@ -69,6 +75,8 @@ body {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  position: absolute;
+  z-index: 10;
 }
 
 ::placeholder {
@@ -172,10 +180,12 @@ input:checked + .slider:before {
 
 #results {
   width: 75%;
-  padding: 1vh;
+  /* padding: 0 ; */
+  margin-top: -1vh;
 }
 
 #results > p {
+  padding: 0 1vh;
   cursor: pointer;
 }
 
@@ -217,6 +227,7 @@ input:checked + .slider:before {
   transform: skew(20deg);
 }
 
-#mid-top h1 {
+.country {
   color: white;
+  margin-left: 50px;
 }

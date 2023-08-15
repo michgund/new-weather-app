@@ -4,13 +4,18 @@ import cities from "./cities";
 
 const dom = (() => {
   let input = document.querySelector(".search");
+  let searchVal;
 
   function render() {
     window.addEventListener("click", (e) => {
       if (e.target === input) {
         input.className = "search";
       } else {
+        if (searchVal) {
+          input.value = searchVal;
+        }
         input.className = "search border";
+        results.innerHTML = "";
       }
     });
 
@@ -39,8 +44,9 @@ const dom = (() => {
               addCity.textContent = cities.sortedArr[i];
               addCity.className = "not-active";
               addCity.addEventListener("click", () => {
-                handlers.handleSearch(addCity.textContent);
-                input.value = addCity.textContent;
+                searchVal = addCity.textContent;
+                handlers.handleSearch(searchVal);
+                input.value = searchVal;
                 results.innerHTML = "";
               });
               input.nextElementSibling.appendChild(addCity);
@@ -87,11 +93,12 @@ const dom = (() => {
         }
       }
       if (e.key == "Enter") {
-        let searchVal =
+        searchVal =
           a == -1
             ? input.value
             : (input.value = results.children[a].textContent);
         handlers.handleSearch(searchVal);
+        input.value = searchVal;
         results.innerHTML = "";
         input.className = "search border";
       }
@@ -103,11 +110,31 @@ const dom = (() => {
   }
 
   function displayData(data) {
-    let midDiv = document.querySelector("#mid-top");
+    console.log(data);
+    let leftBot = document.querySelector("#left-bot");
+    leftBot.innerHTML = "";
+
+    let leftBotTop = document.createElement("div");
     let country = document.createElement("h1");
     country.className = "country";
     country.textContent = `, ${data.cityData.country}`;
-    midDiv.appendChild(country);
+    leftBotTop.appendChild(country);
+
+    let leftBotBot = document.createElement("div");
+    let localTime = document.createElement("h2");
+    localTime.textContent = "Local Time:";
+    leftBotBot.appendChild(localTime);
+    let time = document.createElement("p");
+    let hour = data.cityData.localtime;
+    hour = hour.slice(-5);
+    time.textContent = `${hour}`;
+    leftBotBot.appendChild(time);
+
+    leftBot.appendChild(leftBotTop);
+    leftBot.appendChild(leftBotBot);
+
+    let midDiv = document.querySelector("#mid-top");
+    midDiv.innerHTML = "";
   }
 
   function displayHourlyData(hour, data) {
@@ -118,7 +145,8 @@ const dom = (() => {
       hourlyDiv.className = "hourly";
 
       let time = document.createElement("p");
-      let hourTime = parseInt(hour) + i;
+      // Add 1 because sent through current hour, but want to start showing from next hour.
+      let hourTime = parseInt(hour) + i + 1;
       time.textContent = (() => {
         if (hourTime < 12) {
           return `${hourTime} a.m.`;
