@@ -36,19 +36,18 @@ const api = (() => {
       data.current.condition.text,
       data.current.condition.icon,
       data.current.humidity,
-      data.current.uv
+      data.current.uv,
+      data.forecast.forecastday[0].astro.sunrise,
+      data.forecast.forecastday[0].astro.sunset,
+      data.forecast.forecastday[0].day.daily_chance_of_rain
     );
 
     const currentTempC = getCurrentTempC(
-      data.current.feelslike_c,
-      data.current.gust_kph,
       data.current.temp_c,
       data.current.wind_kph
     );
 
     const currentTempF = getCurrentTempF(
-      data.current.feelslike_f,
-      data.current.gust_mph,
       data.current.temp_f,
       data.current.wind_mph
     );
@@ -83,29 +82,28 @@ const api = (() => {
     };
   }
 
-  function getTemp(cloud, text, icon, humidity, uv) {
+  function getTemp(cloud, text, icon, humidity, uv, sunrise, sunset, rainy) {
     return {
       cloud: cloud,
       text: text,
       icon: icon,
       humidity: humidity,
       uv: uv,
+      sunrise: sunrise,
+      sunset: sunset,
+      rainy: rainy,
     };
   }
 
-  function getCurrentTempC(feelslike, gust, temp, wind) {
+  function getCurrentTempC(temp, wind) {
     return {
-      feelslike: feelslike,
-      gust: gust,
       temp: temp,
       wind: wind,
     };
   }
 
-  function getCurrentTempF(feelslike, gust, temp, wind) {
+  function getCurrentTempF(temp, wind) {
     return {
-      feelslike: feelslike,
-      gust: gust,
       temp: temp,
       wind: wind,
     };

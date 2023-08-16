@@ -109,8 +109,7 @@ const dom = (() => {
     });
   }
 
-  function displayData(data) {
-    console.log(data);
+  function createLeftMain(data) {
     let leftBot = document.querySelector("#left-bot");
     leftBot.innerHTML = "";
 
@@ -148,9 +147,88 @@ const dom = (() => {
 
     leftBot.appendChild(leftBotTop);
     leftBot.appendChild(leftBotBot);
+  }
 
-    let midDiv = document.querySelector("#mid-top");
-    midDiv.innerHTML = "";
+  function createMidMain(data) {
+    let midTop = document.querySelector("#mid-top");
+    midTop.innerHTML = "";
+    midTop.textContent = data.currentTemp.text;
+
+    let midMid = document.querySelector("#mid-mid");
+    midMid.innerHTML = "";
+    let icon = document.createElement("img");
+    icon.src = data.currentTemp.icon;
+    midMid.appendChild(icon);
+
+    let midBot = document.querySelector("#mid-bot");
+    midBot.innerHTML = "";
+    // let unit = "currentTempC";
+    midBot.textContent = `${data.currentTempC.temp} °C`;
+  }
+
+  function createRightMain(data) {
+    let rightDiv = document.querySelector("#right-bot");
+    rightDiv.innerHTML = "";
+
+    let cloudy = createMoreInfoDiv(
+      "Cloudy",
+      "fa-solid fa-cloud",
+      data.currentTemp.cloud
+    );
+    rightDiv.appendChild(cloudy);
+
+    cloudy = document.createElement("div");
+    let cloudyIcon = document.createElement("p");
+    cloudyIcon.innerHTML;
+    cloudy.innerHTML = `<i class="fa-solid fa-cloud"></i>Cloudy: ${data.currentTemp.cloud}%`;
+    rightDiv.appendChild(cloudy);
+
+    let humidity = document.createElement("div");
+    humidity.innerHTML = `<i class="fa-solid fa-droplet"></i>Humidity: ${data.currentTemp.humidity}%`;
+    rightDiv.appendChild(humidity);
+
+    let rainy = document.createElement("div");
+    rainy.innerHTML = `<i class="fa-solid fa-cloud-rain"></i>Chance of rain: ${data.currentTemp.rainy}%`;
+    rightDiv.appendChild(rainy);
+
+    let uv = document.createElement("div");
+    uv.innerHTML = `<i class="fa-solid fa-umbrella-beach"></i>UV index: ${data.currentTemp.uv}`;
+    rightDiv.appendChild(uv);
+
+    let sunrise = document.createElement("div");
+    sunrise.innerHTML = `<i class="fa-regular fa-sun"></i>Sunrise: ${data.currentTemp.sunrise}`;
+    rightDiv.appendChild(sunrise);
+
+    let sunset = document.createElement("div");
+    sunset.innerHTML = `<i class="fa-solid fa-sun"></i>Sunset: ${data.currentTemp.sunset}`;
+    rightDiv.appendChild(sunset);
+  }
+
+  function createMoreInfoDiv(description, iconClass, data) {
+    let div = document.createElement("div");
+    let icon = document.createElement("i");
+    icon.className = iconClass;
+    div.appendChild(icon);
+
+    let right = document.createElement("div");
+    let element = document.createElement("p");
+    element.textContent = description;
+    right.appendChild(element);
+
+    element = document.createElement("p");
+    element.textContent = data;
+    right.appendChild(element);
+
+    div.appendChild(right);
+
+    return div;
+  }
+
+  function displayData(data) {
+    console.log(data);
+    createLeftMain(data);
+    createMidMain(data);
+    createRightMain(data);
   }
 
   function createClockPiece(pieceName, id) {
