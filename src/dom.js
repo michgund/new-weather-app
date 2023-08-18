@@ -1,10 +1,25 @@
 import handlers from "./handlers";
-import api from "./api";
 import cities from "./cities";
 
 const dom = (() => {
   let input = document.querySelector(".search");
   let searchVal;
+
+  let celsius = true;
+  const toggle = document.querySelector(".unit-btn");
+  toggle.parentNode.addEventListener("click", (e) => {
+    if (toggle.classList.contains("toggle")) {
+      toggle.classList.remove("toggle");
+      toggle.innerHTML = "°C";
+      celsius = true;
+      console.log(celsius);
+    } else {
+      toggle.classList.add("toggle");
+      toggle.innerHTML = "°F";
+      celsius = false;
+      console.log(celsius);
+    }
+  });
 
   function render() {
     window.addEventListener("click", (e) => {
@@ -163,52 +178,81 @@ const dom = (() => {
     let midBot = document.querySelector("#mid-bot");
     midBot.innerHTML = "";
     // let unit = "currentTempC";
-    midBot.textContent = `${data.currentTempC.temp} °C`;
+    if (celsius) {
+      midBot.textContent = `${data.currentTempC.temp} °C`;
+    } else {
+      midBot.textContent = `${data.currentTempF.temp} °F`;
+    }
   }
 
   function createRightMain(data) {
     let rightDiv = document.querySelector("#right-bot");
     rightDiv.innerHTML = "";
+    let title = document.createElement("h1");
+    title.className = "title";
+    title.textContent = "Daily stats";
+    rightDiv.appendChild(title);
 
     let cloudy = createMoreInfoDiv(
       "Cloudy",
       "fa-solid fa-cloud",
-      data.currentTemp.cloud
+      `${data.currentTemp.cloud}%`
     );
     rightDiv.appendChild(cloudy);
 
-    cloudy = document.createElement("div");
-    let cloudyIcon = document.createElement("p");
-    cloudyIcon.innerHTML;
-    cloudy.innerHTML = `<i class="fa-solid fa-cloud"></i>Cloudy: ${data.currentTemp.cloud}%`;
-    rightDiv.appendChild(cloudy);
-
-    let humidity = document.createElement("div");
-    humidity.innerHTML = `<i class="fa-solid fa-droplet"></i>Humidity: ${data.currentTemp.humidity}%`;
+    let humidity = createMoreInfoDiv(
+      "Humidity",
+      "fa-solid fa-droplet",
+      `${data.currentTemp.humidity}%`
+    );
     rightDiv.appendChild(humidity);
 
-    let rainy = document.createElement("div");
-    rainy.innerHTML = `<i class="fa-solid fa-cloud-rain"></i>Chance of rain: ${data.currentTemp.rainy}%`;
+    let rainy = createMoreInfoDiv(
+      "Chance of rain",
+      "fa-solid fa-cloud-rain",
+      `${data.currentTemp.rainy}%`
+    );
     rightDiv.appendChild(rainy);
 
-    let uv = document.createElement("div");
-    uv.innerHTML = `<i class="fa-solid fa-umbrella-beach"></i>UV index: ${data.currentTemp.uv}`;
+    let uv = createMoreInfoDiv(
+      "UV index",
+      "fa-solid fa-umbrella-beach",
+      data.currentTemp.uv
+    );
     rightDiv.appendChild(uv);
 
-    let sunrise = document.createElement("div");
-    sunrise.innerHTML = `<i class="fa-regular fa-sun"></i>Sunrise: ${data.currentTemp.sunrise}`;
+    let sunriseData = data.currentTemp.sunrise;
+    sunriseData = sunriseData.replace(/^0/, "");
+    let sunrise = createMoreInfoDiv(
+      "Sunrise",
+      "fa-regular fa-sun",
+      sunriseData
+    );
     rightDiv.appendChild(sunrise);
 
-    let sunset = document.createElement("div");
-    sunset.innerHTML = `<i class="fa-solid fa-sun"></i>Sunset: ${data.currentTemp.sunset}`;
+    let sunsetData = data.currentTemp.sunset;
+    sunsetData = sunsetData.replace(/^0/, "");
+    let sunset = createMoreInfoDiv("Sunset", "fa-solid fa-sun", sunsetData);
     rightDiv.appendChild(sunset);
+  }
+
+  function createUnitSensitiveInfo(data) {
+    let midBot = document.querySelector("#mid-bot");
+    midBot.innerHTML = "";
+    if (celsius) {
+      midBot.textContent = `${data.currentTempC.temp} °C`;
+    } else {
+      midBot.textContent = `${data.currentTempF.temp} °F`;
+    }
   }
 
   function createMoreInfoDiv(description, iconClass, data) {
     let div = document.createElement("div");
+    let divDiv = document.createElement("div");
     let icon = document.createElement("i");
     icon.className = iconClass;
-    div.appendChild(icon);
+    divDiv.appendChild(icon);
+    div.appendChild(divDiv);
 
     let right = document.createElement("div");
     let element = document.createElement("p");
@@ -229,6 +273,15 @@ const dom = (() => {
     createLeftMain(data);
     createMidMain(data);
     createRightMain(data);
+    createUnitSensitiveInfo(data);
+    const toggle = document.querySelector(".unit-btn");
+    toggle.parentNode.addEventListener("click", (e) => {
+      if (toggle.classList.contains("toggle")) {
+        createUnitSensitiveInfo(data);
+      } else {
+        createUnitSensitiveInfo(data);
+      }
+    });
   }
 
   function createClockPiece(pieceName, id) {
@@ -268,8 +321,11 @@ const dom = (() => {
       hourlyDiv.appendChild(img);
 
       let temp = document.createElement("p");
-      let unit = "C";
-      temp.textContent = `${Math.round(data[i].tempC)} °${unit}`;
+      if (celsius) {
+        temp.textContent = `${Math.round(data[i].tempC)} °C`;
+      } else {
+        temp.textContent = `${Math.round(data[i].tempF)} °F`;
+      }
       hourlyDiv.appendChild(temp);
 
       container.appendChild(hourlyDiv);
