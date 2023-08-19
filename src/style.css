@@ -10,7 +10,7 @@
   height: 100%;
   width: 100vw;
   background-color: rgb(69, 69, 255);
-  padding: 15vh;
+  padding: 5vh 15vh;
   /* position: relative; */
   display: flex;
   flex-direction: column;
@@ -42,7 +42,8 @@ body {
 }
 
 #top {
-  height: 50vh;
+  min-height: 50vh;
+  max-height: max-content;
   background-color: cornflowerblue;
   border-radius: 15px 15px 0 0;
   padding: 3vh;
@@ -350,4 +351,17 @@ body {
 
 #right-bot > div:nth-of-type(2) i {
   margin-right: 2vw;
+}
+
+@media (max-width: 1200px) {
+  #top {
+    max-width: 800px;
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 1000px) {
+  #top {
+    width: 350px;
+    flex-direction: column;
+  }
 }
