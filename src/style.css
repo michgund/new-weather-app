@@ -292,6 +292,9 @@ body {
   /* justify-content: space-between; */
   /* margin: 2vh 0; */
 }
+#mid-top {
+  text-align: center;
+}
 #mid-mid {
   display: flex;
   justify-content: center;
@@ -315,6 +318,7 @@ body {
 
 #right-bot > h1 {
   margin: 1vh 0;
+  user-select: none;
 }
 
 #right-bot > div {

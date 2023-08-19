@@ -6,18 +6,17 @@ const dom = (() => {
   let searchVal;
 
   let celsius = true;
+  let data = false;
   const toggle = document.querySelector(".unit-btn");
   toggle.parentNode.addEventListener("click", (e) => {
-    if (toggle.classList.contains("toggle")) {
-      toggle.classList.remove("toggle");
-      toggle.innerHTML = "°C";
-      celsius = true;
-      console.log(celsius);
-    } else {
+    if (celsius) {
       toggle.classList.add("toggle");
       toggle.innerHTML = "°F";
       celsius = false;
-      console.log(celsius);
+    } else {
+      toggle.classList.remove("toggle");
+      toggle.innerHTML = "°C";
+      celsius = true;
     }
   });
 
@@ -174,22 +173,12 @@ const dom = (() => {
     let icon = document.createElement("img");
     icon.src = data.currentTemp.icon;
     midMid.appendChild(icon);
-
-    let midBot = document.querySelector("#mid-bot");
-    midBot.innerHTML = "";
-    // let unit = "currentTempC";
-    if (celsius) {
-      midBot.textContent = `${data.currentTempC.temp} °C`;
-    } else {
-      midBot.textContent = `${data.currentTempF.temp} °F`;
-    }
   }
 
   function createRightMain(data) {
     let rightDiv = document.querySelector("#right-bot");
     rightDiv.innerHTML = "";
     let title = document.createElement("h1");
-    title.className = "title";
     title.textContent = "Daily stats";
     rightDiv.appendChild(title);
 
@@ -244,6 +233,17 @@ const dom = (() => {
     } else {
       midBot.textContent = `${data.currentTempF.temp} °F`;
     }
+
+    let temps = document.querySelectorAll(".hourly > img + p");
+    console.log(temps);
+    for (let i = 0; i < temps.length; i++) {
+      console.log(temps);
+      if (celsius) {
+        temps[i].textContent = `${Math.round(data.todaysTemp[i].tempC)} °C`;
+      } else {
+        temps[i].textContent = `${Math.round(data.todaysTemp[i].tempF)} °F`;
+      }
+    }
   }
 
   function createMoreInfoDiv(description, iconClass, data) {
@@ -273,14 +273,10 @@ const dom = (() => {
     createLeftMain(data);
     createMidMain(data);
     createRightMain(data);
+    displayHourlyData(data.hour, data.todaysTemp);
     createUnitSensitiveInfo(data);
-    const toggle = document.querySelector(".unit-btn");
     toggle.parentNode.addEventListener("click", (e) => {
-      if (toggle.classList.contains("toggle")) {
-        createUnitSensitiveInfo(data);
-      } else {
-        createUnitSensitiveInfo(data);
-      }
+      createUnitSensitiveInfo(data);
     });
   }
 
@@ -321,11 +317,6 @@ const dom = (() => {
       hourlyDiv.appendChild(img);
 
       let temp = document.createElement("p");
-      if (celsius) {
-        temp.textContent = `${Math.round(data[i].tempC)} °C`;
-      } else {
-        temp.textContent = `${Math.round(data[i].tempF)} °F`;
-      }
       hourlyDiv.appendChild(temp);
 
       container.appendChild(hourlyDiv);
@@ -336,7 +327,6 @@ const dom = (() => {
     input,
     render,
     displayData,
-    displayHourlyData,
   };
 })();
 
