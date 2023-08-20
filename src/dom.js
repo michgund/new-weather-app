@@ -148,7 +148,6 @@ const dom = (() => {
     let second = createClockPiece("second", "second");
     clock.appendChild(second);
     setInterval(() => {
-      // let d = new Date(); //object of date()
       let hr = data.hour;
       let min = new Date().getMinutes();
       let sec = new Date().getSeconds();
@@ -276,7 +275,6 @@ const dom = (() => {
     displayHourlyData(data.hour, data.todaysTemp);
     createUnitSensitiveInfo(data);
     slider.onclick = () => {
-      console.log(slider);
       createUnitSensitiveInfo(data);
     };
   }
