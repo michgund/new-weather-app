@@ -9,6 +9,7 @@ const handlers = (() => {
       let essentialData = api.getEssential(data);
       dom.displayData(essentialData);
     } catch (err) {
+      dom.displayError(err, val);
       if (err == "Error: 400") {
         console.log(`No city found. Are you sure you meant ${val}?`);
       } else {

@@ -5,10 +5,11 @@ const dom = (() => {
   let input = document.querySelector(".search");
   let searchVal;
 
+  // toggle between celsius and fahrenheit
   let celsius = true;
-  let data = false;
   const toggle = document.querySelector(".unit-btn");
-  toggle.parentNode.addEventListener("click", (e) => {
+  let slider = toggle.parentElement;
+  slider.addEventListener("click", (e) => {
     if (celsius) {
       toggle.classList.add("toggle");
       toggle.innerHTML = "°F";
@@ -21,24 +22,23 @@ const dom = (() => {
   });
 
   function render() {
-    window.addEventListener("click", (e) => {
-      if (e.target === input) {
-        input.className = "search";
-      } else {
-        if (searchVal) {
-          input.value = searchVal;
-        }
-        input.className = "search border";
-        results.innerHTML = "";
-      }
+    // show border around input if it is not in focus
+    input.addEventListener("focus", (e) => {
+      input.className = "search";
+    });
+    input.addEventListener("blur", () => {
+      input.className = "search border";
+      results.innerHTML = "";
     });
 
+    // update results search box with cities as user types
     input.addEventListener("keyup", function (e) {
       if (e.key != "ArrowDown" && e.key != "ArrowUp" && e.key != "Enter") {
         search();
       }
     });
 
+    //
     function search() {
       let j = 0;
       results.innerHTML = "";
@@ -60,7 +60,7 @@ const dom = (() => {
               addCity.addEventListener("click", () => {
                 searchVal = addCity.textContent;
                 handlers.handleSearch(searchVal);
-                input.value = searchVal;
+                input.value = "";
                 results.innerHTML = "";
               });
               input.nextElementSibling.appendChild(addCity);
@@ -74,6 +74,7 @@ const dom = (() => {
       }
     }
 
+    // scroll through the search results with up and down arrow
     let a = -1;
     input.addEventListener("keydown", function (e) {
       if (e.key == "ArrowDown") {
@@ -111,8 +112,10 @@ const dom = (() => {
           a == -1
             ? input.value
             : (input.value = results.children[a].textContent);
-        handlers.handleSearch(searchVal);
-        input.value = searchVal;
+        if (searchVal != "") {
+          handlers.handleSearch(searchVal);
+        }
+        input.value = "";
         results.innerHTML = "";
         input.className = "search border";
       }
@@ -130,7 +133,7 @@ const dom = (() => {
     let leftBotTop = document.createElement("div");
     let country = document.createElement("h1");
     country.className = "country";
-    country.textContent = `, ${data.cityData.country}`;
+    country.textContent = `${data.cityData.cityName}, ${data.cityData.country}`;
     leftBotTop.appendChild(country);
 
     let leftBotBot = document.createElement("div");
@@ -235,9 +238,7 @@ const dom = (() => {
     }
 
     let temps = document.querySelectorAll(".hourly > img + p");
-    console.log(temps);
     for (let i = 0; i < temps.length; i++) {
-      console.log(temps);
       if (celsius) {
         temps[i].textContent = `${Math.round(data.todaysTemp[i].tempC)} °C`;
       } else {
@@ -268,16 +269,16 @@ const dom = (() => {
     return div;
   }
 
-  function displayData(data) {
-    console.log(data);
+  async function displayData(data) {
     createLeftMain(data);
     createMidMain(data);
     createRightMain(data);
     displayHourlyData(data.hour, data.todaysTemp);
     createUnitSensitiveInfo(data);
-    toggle.parentNode.addEventListener("click", (e) => {
+    slider.onclick = () => {
+      console.log(slider);
       createUnitSensitiveInfo(data);
-    });
+    };
   }
 
   function createClockPiece(pieceName, id) {
@@ -323,10 +324,57 @@ const dom = (() => {
     }
   }
 
+  function displayError(err, val) {
+    console.log(err);
+    if (err == "Error: 400") {
+      const dialog = document.getElementById("favDialog");
+      dialog.showModal();
+
+      let text = document.querySelector(".no-city");
+      console.log(text);
+      if (!text) {
+        let text = document.createElement("p");
+        text.className = "no-city";
+        text.textContent = `No city found. Are you sure you meant ${val}?`;
+        dialog.firstElementChild.insertBefore(
+          text,
+          dialog.firstElementChild.firstElementChild
+        );
+      } else {
+        text.textContent = `No city found. Are you sure you meant ${val}?`;
+      }
+
+      let form = dialog.querySelector("form");
+      form.addEventListener("submit", () => {
+        if (city.value != "") {
+          handlers.handleSearch(city.value);
+          city.value = "";
+        }
+        dialog.close();
+      });
+
+      const cancelButton = document.getElementById("cancel");
+      // Form cancel button closes the dialog box
+      cancelButton.addEventListener("click", () => {
+        dialog.close();
+      });
+    } else {
+      const dialog = document.getElementById("favDialogErr");
+      dialog.showModal();
+
+      const cancelButton = document.getElementById("cancelErr");
+      // Form cancel button closes the dialog box
+      cancelButton.addEventListener("click", () => {
+        dialog.close();
+      });
+    }
+  }
+
   return {
     input,
     render,
     displayData,
+    displayError,
   };
 })();
 

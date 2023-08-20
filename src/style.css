@@ -44,7 +44,7 @@ body {
 #top {
   min-height: 50vh;
   max-height: max-content;
-  background-color: cornflowerblue;
+  background-color: rgb(100, 149, 237);
   border-radius: 15px 15px 0 0;
   padding: 3vh;
   display: flex;
@@ -364,4 +364,27 @@ body {
     width: 350px;
     flex-direction: column;
   }
+}
+
+dialog {
+  position: absolute;
+  left: 50%;
+  top: 25%;
+  transform: translate(-50%, -50%);
+  height: 25%;
+  width: 25%;
+  background-color: rgba(100, 149, 237, 0.6);
+  border: none;
+  border-radius: 15px;
+}
+
+dialog > form {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.no-city {
+  font-weight: 900;
 }

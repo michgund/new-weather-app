@@ -21,6 +21,7 @@
                   class="search border"
                   type="text"
                   placeholder="Search..."
+                  tabindex="0"
                 />
                 <div id="results"></div>
               </div>
@@ -35,7 +36,7 @@
           <div id="right">
             <div id="right-top">
               <div class="switch">
-                <span class="slider round">
+                <span #id="slider" class="slider round">
                   <div class="unit-btn"><span>°C</span></div>
                 </span>
               </div>
@@ -56,5 +57,25 @@
         /></a>
       </div>
     </div>
+    <dialog id="favDialog">
+      <form method="dialog">
+        <p>
+          <label for="city">Search a different city:</label>
+          <input type="text" name="city" id="city" tabindex="0" />
+        </p>
+        <div>
+          <button id="cancel" type="reset">Cancel</button>
+          <button type="submit">Search</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="favDialogErr">
+      <form method="dialog">
+        <p>Uh oh! Something went wrong, please try again later!</p>
+        <div>
+          <button id="cancelErr" type="reset">OK</button>
+        </div>
+      </form>
+    </dialog>
   </body>
 </html>
