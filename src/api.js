@@ -9,7 +9,7 @@ const api = (() => {
 
   async function getInfo(val) {
     let response = await fetch(
-      `//api.weatherapi.com/v1/forecast.json?key=${APIkey}&q=${val}&days=${days}`
+      `https://api.weatherapi.com/v1/forecast.json?key=${APIkey}&q=${val}&days=${days}`
     );
 
     if (response.status == 200) {
