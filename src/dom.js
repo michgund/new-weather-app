@@ -25,10 +25,11 @@ const dom = (() => {
     // show border around input if it is not in focus
     input.addEventListener("focus", (e) => {
       input.className = "search";
+      results.style = "opacity: 1";
     });
     input.addEventListener("blur", () => {
       input.className = "search border";
-      results.innerHTML = "";
+      results.style = "opacity: 0";
     });
 
     // update results search box with cities as user types
@@ -231,9 +232,9 @@ const dom = (() => {
     let midBot = document.querySelector("#mid-bot");
     midBot.innerHTML = "";
     if (celsius) {
-      midBot.textContent = `${data.currentTempC.temp} °C`;
+      midBot.textContent = `${Math.round(data.currentTempC.temp)} °C`;
     } else {
-      midBot.textContent = `${data.currentTempF.temp} °F`;
+      midBot.textContent = `${Math.round(data.currentTempF.temp)} °F`;
     }
 
     let temps = document.querySelectorAll(".hourly > img + p");
