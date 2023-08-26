@@ -27,6 +27,7 @@ const dom = (() => {
       input.className = "search";
       results.style = "opacity: 1";
     });
+    
     input.addEventListener("blur", () => {
       input.className = "search border";
       results.style = "opacity: 0";
